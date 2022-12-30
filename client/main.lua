@@ -1,11 +1,11 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+ESX = exports["es_extended"]:getSharedObject()
 
 local function GetBuffs()
     -- If making multiple calls to GetBuffs we dont get a result of the 2nd call
     -- The wait seems to fix the issue
     Wait(1)
     local p = promise.new()
-    QBCore.Functions.TriggerCallback('buffs:server:fetchBuffs', function(result)
+    ESX.TriggerServerCallback('buffs:server:fetchBuffs', function(result)
         p:resolve(result)
     end)
     return Citizen.Await(p)
