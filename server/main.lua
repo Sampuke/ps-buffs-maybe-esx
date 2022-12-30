@@ -1,4 +1,4 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+ESX = exports["es_extended"]:getSharedObject()
 local playerBuffs = {}
 local next = next
 
@@ -74,7 +74,7 @@ local function Removebuff(citizenID, buffName)
         
         playerBuffs[citizenID][buffName] = nil
 
-        local player = QBCore.Functions.GetPlayerByCitizenId(citizenID)
+        local player = ESX.GetPlayerFromIdentifier(citizenID)
         local sourceID = nil
 
         if player then
@@ -123,13 +123,13 @@ local function HasBuff(citizenID, buffName)
     return false
 end exports('HasBuff', HasBuff)
 
-QBCore.Functions.CreateCallback('buffs:server:fetchBuffs', function(source, cb)
+ESX.RegisterServerCallback('buffs:server:fetchBuffs', function(source, cb)
     local player = QBCore.Functions.GetPlayer(source)
     local citizenID = player.PlayerData.citizenid
     cb(playerBuffs[citizenID])
 end)
 
-QBCore.Functions.CreateCallback('buffs:server:addBuff', function(source, cb, buffName, time)
+ESX.RegisterServerCallback('buffs:server:addBuff', function(source, cb, buffName, time)
     local player = QBCore.Functions.GetPlayer(source)
     local citizenID = player.PlayerData.citizenid
     cb(AddBuff(source, citizenID, buffName, time))
@@ -177,7 +177,7 @@ CreateThread(function()
     -- Then we remove that player from our table to ensure we dont loop them
     while true do
         for citizenID, buffTable in pairs(playerBuffs) do
-            local player = QBCore.Functions.GetPlayerByCitizenId(citizenID)
+            local player = ESX.GetPlayerFromIdentifier(citizenID)
             local sourceID = nil
             
             if player then
